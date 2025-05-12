@@ -1,7 +1,7 @@
 //! I2C Interface
 use super::Interface;
 use super::Sensor;
-use embedded_hal::blocking::i2c::{Write, WriteRead};
+use embedded_hal::i2c::I2c;
 use Sensor::*;
 /// Errors in this crate
 #[derive(Debug)]
@@ -59,7 +59,7 @@ impl<I2C> I2cInterface<I2C> {
 /// Implementation of `Interface`
 impl<I2C, CommE> Interface for I2cInterface<I2C>
 where
-    I2C: WriteRead<Error = CommE> + Write<Error = CommE>,
+    I2C: I2c<Error = CommE>,
 {
     type Error = Error<CommE>;
 

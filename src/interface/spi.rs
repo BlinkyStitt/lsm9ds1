@@ -1,7 +1,8 @@
 //! SPI Interface
 use super::Interface;
 use super::Sensor;
-use embedded_hal::{blocking::spi::Transfer, blocking::spi::Write, digital::v2::OutputPin};
+use embedded_hal::digital::OutputPin;
+use embedded_hal::spi::SpiBus;
 use Sensor::*;
 
 /// R/W bit should be high for SPI Read operation
@@ -27,7 +28,7 @@ pub struct SpiInterface<SPI, AG, M> {
 
 impl<SPI, AG, M, CommE, PinE> SpiInterface<SPI, AG, M>
 where
-    SPI: Transfer<u8, Error = CommE> + Write<u8, Error = CommE>,
+    SPI: SpiBus<u8, Error = CommE>,
     AG: OutputPin<Error = PinE>,
     M: OutputPin<Error = PinE>,
 {
@@ -44,7 +45,7 @@ where
 /// Implementation of `Interface`
 impl<SPI, AG, M, CommE, PinE> Interface for SpiInterface<SPI, AG, M>
 where
-    SPI: Transfer<u8, Error = CommE> + Write<u8, Error = CommE>,
+    SPI: SpiBus<u8, Error = CommE>,
     AG: OutputPin<Error = PinE>,
     M: OutputPin<Error = PinE>,
 {
@@ -71,16 +72,16 @@ where
         match sensor {
             Accelerometer | Gyro | Temperature => {
                 self.ag_cs.set_low().map_err(Error::Pin)?;
-                self.spi.write(&[SPI_READ | addr]).map_err(Error::Comm)?;
-                self.spi.transfer(buffer).map_err(Error::Comm)?;
+                self.spi
+                    .transfer(buffer, &[SPI_READ | addr])
+                    .map_err(Error::Comm)?;
                 self.ag_cs.set_high().map_err(Error::Pin)?;
             }
             Magnetometer => {
                 self.m_cs.set_low().map_err(Error::Pin)?;
                 self.spi
-                    .write(&[SPI_READ | MS_BIT | addr])
+                    .transfer(buffer, &[SPI_READ | MS_BIT | addr])
                     .map_err(Error::Comm)?;
-                self.spi.transfer(buffer).map_err(Error::Comm)?;
                 self.m_cs.set_high().map_err(Error::Pin)?;
             }
         }
