@@ -29,7 +29,7 @@ where
     /// * `ag_cs` - Chip Select pin for Accelerometer/Gyroscope
     /// * `m_cs` - Chip Select pin for Magnetometer
     ///
-    /// TODO: take the chip select pins and the bus and create the device here?
+    /// TODO: take the chip select pins and the bus and create the device here? will need to use embedded-hal-bus probably
     pub fn init(ag_device: AGSpi, m_device: MSpi) -> Self {
         Self {
             ag_device,
