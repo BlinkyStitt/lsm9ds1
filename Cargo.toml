@@ -13,3 +13,5 @@ repository = "https://github.com/lonesometraveler/lsm9ds1"
 
 [dependencies]
 embedded-hal = { version = "1.0.0" }
+
+# TODO: embedded-hal-bus with optional async

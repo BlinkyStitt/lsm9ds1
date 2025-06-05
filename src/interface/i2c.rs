@@ -17,7 +17,7 @@ pub enum AgAddress {
 }
 
 impl AgAddress {
-    pub fn addr(self) -> u8 {
+    pub const fn addr(self) -> u8 {
         self as u8
     }
 }
@@ -29,7 +29,7 @@ pub enum MagAddress {
 }
 
 impl MagAddress {
-    pub fn addr(self) -> u8 {
+    pub const fn addr(self) -> u8 {
         self as u8
     }
 }
