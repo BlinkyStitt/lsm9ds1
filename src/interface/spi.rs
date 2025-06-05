@@ -1,6 +1,6 @@
 //! SPI Interface
 use super::Interface;
-use crate::sensor::Sensor::{self, Accelerometer, Gyro, Magnetometer, Temperature};
+use crate::sensor::Sensor;
 use embedded_hal::spi::SpiDevice;
 
 /// R/W bit should be high for SPI Read operation
@@ -44,17 +44,19 @@ where
     fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error> {
         let bytes = [addr, value];
         match sensor {
-            Accelerometer | Gyro | Temperature => self.ag_device.write(&bytes),
-            Magnetometer => self.m_device.write(&bytes),
+            Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => {
+                self.ag_device.write(&bytes)
+            }
+            Sensor::Magnetometer => self.m_device.write(&bytes),
         }
     }
 
     fn read(&mut self, sensor: Sensor, addr: u8, buffer: &mut [u8]) -> Result<(), Self::Error> {
         match sensor {
-            Accelerometer | Gyro | Temperature => {
+            Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => {
                 self.ag_device.transfer(buffer, &[SPI_READ | addr])
             }
-            Magnetometer => self.m_device.transfer(buffer, &[SPI_READ | MS_BIT | addr]),
+            Sensor::Magnetometer => self.m_device.transfer(buffer, &[SPI_READ | MS_BIT | addr]),
         }
     }
 }
