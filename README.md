@@ -1,36 +1,36 @@
-# lsm9ds1
+# lsm9ds1-async
 
 ![](https://img.shields.io/crates/v/lsm9ds1.svg)
 ![](https://docs.rs/lsm9ds1/badge.svg)
 ![](https://github.com/lonesometraveler/lsm9ds1/workflows/build/badge.svg)
 
-A platform agnostic driver to interface with LSM9DS1 3D accelerometer, 3D gyroscope, 3D magnetometer sensor module.
+A platform agnostic **async** driver to interface with LSM9DS1 3D accelerometer, 3D gyroscope, 3D magnetometer sensor module.
 
-* [LSM9DS1 datasheet](https://www.st.com/resource/en/datasheet/lsm9ds1.pdf)
+- [LSM9DS1 datasheet](https://www.st.com/resource/en/datasheet/lsm9ds1.pdf)
 
 This library is work in progress. Not all features are implemented yet. Contributions are welcome.
 
 ## Features
 
-* [x] SPI communication with Accelerometer/Gyroscope
-* [x] SPI communication with Magnetometer
-* [x] SPI communication with Temperature Sensor
-* [x] I2C communication with Accelerometer/Gyroscope
-* [ ] I2C communication with Magnetometer
-* [x] I2C communication with Temperature Sensor
-* [x] Custom sensor settings
-* [x] Sensor reading (Accel, Gyro, Mag, Temperature)
-* [x] Raw Sensor reading (Accel, Gyro, Mag) See `read_sensor_raw()`.
-* [ ] Calibration
-* [ ] Interrupt
-* [x] FIFO Mode
-
+- [x] SPI communication with Accelerometer/Gyroscope
+- [x] SPI communication with Magnetometer
+- [x] SPI communication with Temperature Sensor
+- [x] I2C communication with Accelerometer/Gyroscope
+- [ ] I2C communication with Magnetometer
+- [x] I2C communication with Temperature Sensor
+- [x] Custom sensor settings
+- [x] Sensor reading (Accel, Gyro, Mag, Temperature)
+- [x] Raw Sensor reading (Accel, Gyro, Mag) See `read_sensor_raw()`.
+- [ ] Calibration
+- [ ] Interrupt
+- [x] FIFO Mode
+- [ ] allow blocking or async mode
 
 ## Usage
 
 ### Overview
 
-1. Configure sensor settings with `LSM9DS1Init`. 
+1. Configure sensor settings with `LSM9DS1Init`.
 2. Initialize a communication interface: either `SpiInterface` or `I2cInterface`.
 3. Initialize `LSM9DS1` driver with the interface of your choice.
 4. Start the sensors.
@@ -38,7 +38,7 @@ This library is work in progress. Not all features are implemented yet. Contribu
 
 ### Sensor Settings
 
-This driver uses `LSM9DS1Init` struct to set sensor configuration. 
+This driver uses `LSM9DS1Init` struct to set sensor configuration.
 
 ```rust
 pub struct LSM9DS1Init {
@@ -47,6 +47,7 @@ pub struct LSM9DS1Init {
     pub mag: MagSettings,
 }
 ```
+
 You can find each sensor's default settings in `accel.rs`, `gyro.rs` and `mag.rs`.
 
 #### Accelerometer default settings
@@ -113,6 +114,7 @@ impl Default for MagSettings {
     }
 }
 ```
+
 ### How to configure settings
 
 If you want to use the default settings, initialize `LSM9DS1Init` this way.
@@ -122,6 +124,7 @@ LSM9DS1Init {
     ..Default::default()
 }
 ```
+
 If you want a custom configuration, modify the fields that are different from the default values.
 
 ```rust
@@ -234,7 +237,7 @@ fn main() -> ! {
         ..Default::default()
     }
     .with_interface(spi_interface);
-	
+
     // start sensors
     lsm9ds1.begin_accel().unwrap();
     lsm9ds1.begin_gyro().unwrap();
