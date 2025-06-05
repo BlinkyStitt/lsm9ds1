@@ -3,7 +3,6 @@ use crate::{
     accel::AccelSettings,
     fifo::{Decimate, FIFOConfig},
     gyro::GyroSettings,
-    interface::Sensor,
     interrupts::{
         accel_int::IntConfigAccel,
         gyro_int::IntConfigGyro,
@@ -12,6 +11,7 @@ use crate::{
     },
     mag::MagSettings,
     register,
+    sensor::Sensor,
 };
 
 pub trait ConfigToWrite {

@@ -4,7 +4,7 @@
 //! - [LSM9DS1](https://www.st.com/resource/en/datasheet/lsm9ds1.pdf)
 //!
 #![no_std]
-// #![deny(warnings, missing_docs)]
+
 pub mod accel;
 pub mod configuration;
 pub mod fifo;
@@ -13,18 +13,21 @@ pub mod interface;
 pub mod interrupts;
 pub mod mag;
 pub mod register;
+pub mod sensor;
 
 use accel::AccelSettings;
 use configuration::ConfigToWrite;
 use fifo::{Decimate, FIFOBitmasks, FIFOConfig, FIFOStatus};
 use gyro::GyroSettings;
-use interface::{Interface, Sensor};
 use interrupts::accel_int::IntConfigAccel;
 use interrupts::gyro_int::IntConfigGyro;
 use interrupts::mag_int::IntConfigMag;
 use interrupts::pins_config::{self, IntConfigAG1, IntConfigAG2, PinConfig};
 use mag::MagSettings;
 use pins_config::PinConfigBitmask;
+use sensor::Sensor;
+
+use crate::interface::Interface;
 
 /// Accelerometer/Gyroscope's ID
 const WHO_AM_I_AG: u8 = 0x68;
@@ -97,10 +100,11 @@ where
     }
 
     fn reachable(&mut self, sensor: Sensor) -> Result<bool, T::Error> {
-        use Sensor::*;
         let (who_am_i, register) = match sensor {
-            Accelerometer | Gyro | Temperature => (WHO_AM_I_AG, register::AG::WHO_AM_I.addr()),
-            Magnetometer => (WHO_AM_I_M, register::Mag::WHO_AM_I.addr()),
+            Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => {
+                (WHO_AM_I_AG, register::AG::WHO_AM_I.addr())
+            }
+            Sensor::Magnetometer => (WHO_AM_I_M, register::Mag::WHO_AM_I.addr()),
         };
         Ok(self.read_register(sensor, register)? == who_am_i)
     }
@@ -139,10 +143,11 @@ where
     }
 
     fn data_available(&mut self, sensor: Sensor) -> Result<u8, T::Error> {
-        use Sensor::*;
         let register = match sensor {
-            Accelerometer | Gyro | Temperature => register::AG::STATUS_REG_1.addr(),
-            Magnetometer => register::Mag::STATUS_REG_M.addr(),
+            Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => {
+                register::AG::STATUS_REG_1.addr()
+            }
+            Sensor::Magnetometer => register::Mag::STATUS_REG_M.addr(),
         };
         self.read_register(sensor, register)
     }

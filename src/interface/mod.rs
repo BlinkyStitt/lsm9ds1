@@ -1,8 +1,10 @@
 //! Interface trait
-pub mod spi;
-pub use self::spi::SpiInterface;
 pub mod i2c;
+pub mod spi;
+
 pub use self::i2c::I2cInterface;
+pub use self::spi::SpiInterface;
+use crate::sensor::Sensor;
 
 /// Interface Trait. `SpiInterface` and `I2cInterface` implement this.
 pub trait Interface {
@@ -20,13 +22,4 @@ pub trait Interface {
     /// * `addr` - register address
     /// * `buffer` - buffer to store read data
     fn read(&mut self, sensor: Sensor, addr: u8, buffer: &mut [u8]) -> Result<(), Self::Error>;
-}
-
-/// Available Sensors to talk to
-#[derive(Copy, Clone)]
-pub enum Sensor {
-    Accelerometer,
-    Gyro,
-    Magnetometer,
-    Temperature,
 }

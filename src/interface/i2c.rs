@@ -1,8 +1,8 @@
 //! I2C Interface
 use super::Interface;
-use super::Sensor;
+use crate::sensor::Sensor::{self, Accelerometer, Gyro, Magnetometer, Temperature};
 use embedded_hal::i2c::I2c;
-use Sensor::*;
+
 /// Errors in this crate
 #[derive(Debug)]
 pub enum Error<CommE> {
