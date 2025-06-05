@@ -15,11 +15,16 @@ pub trait Interface {
     /// * `sensor` - `Sensor` to talk to
     /// * `addr` - register address
     /// * `value` - value to write
-    fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error>;
+    async fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error>;
     /// Reads multiple bytes from a sensor's specified register address.
     /// # Arguments
     /// * `sensor` - `Sensor` to talk to
     /// * `addr` - register address
     /// * `buffer` - buffer to store read data
-    fn read(&mut self, sensor: Sensor, addr: u8, buffer: &mut [u8]) -> Result<(), Self::Error>;
+    async fn read(
+        &mut self,
+        sensor: Sensor,
+        addr: u8,
+        buffer: &mut [u8],
+    ) -> Result<(), Self::Error>;
 }

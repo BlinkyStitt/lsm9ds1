@@ -1,7 +1,7 @@
 //! I2C Interface
 use super::Interface;
 use crate::sensor::Sensor;
-use embedded_hal::i2c::I2c;
+use embedded_hal_async::i2c::I2c;
 
 /// Errors in this crate
 #[derive(Debug)]
@@ -63,23 +63,30 @@ where
 {
     type Error = Error<CommE>;
 
-    fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error> {
+    async fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error> {
         let sensor_addr = match sensor {
             Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => self.ag_addr,
             Sensor::Magnetometer => self.mag_addr,
         };
         self.i2c
             .write(sensor_addr, &[addr, value])
+            .await
             .map_err(Error::Comm)
     }
 
-    fn read(&mut self, sensor: Sensor, addr: u8, buffer: &mut [u8]) -> Result<(), Self::Error> {
+    async fn read(
+        &mut self,
+        sensor: Sensor,
+        addr: u8,
+        buffer: &mut [u8],
+    ) -> Result<(), Self::Error> {
         let sensor_addr = match sensor {
             Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => self.ag_addr,
             Sensor::Magnetometer => self.mag_addr,
         };
         self.i2c
             .write_read(sensor_addr, &[addr], buffer)
+            .await
             .map_err(Error::Comm)
     }
 }

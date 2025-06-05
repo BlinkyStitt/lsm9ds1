@@ -1,7 +1,7 @@
 //! SPI Interface
 use super::Interface;
 use crate::sensor::Sensor;
-use embedded_hal::spi::{Operation, SpiDevice};
+use embedded_hal_async::spi::{Operation, SpiDevice};
 
 /// R/W bit should be high for SPI Read operation
 const SPI_READ: u8 = 0x80;
@@ -52,17 +52,22 @@ where
 {
     type Error = Errors<AGSpi::Error, MSpi::Error>;
 
-    fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error> {
+    async fn write(&mut self, sensor: Sensor, addr: u8, value: u8) -> Result<(), Self::Error> {
         let bytes = [addr, value];
         match sensor {
             Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => {
-                self.ag_device.write(&bytes).map_err(Errors::AG)
+                self.ag_device.write(&bytes).await.map_err(Errors::AG)
             }
-            Sensor::Magnetometer => self.m_device.write(&bytes).map_err(Errors::M),
+            Sensor::Magnetometer => self.m_device.write(&bytes).await.map_err(Errors::M),
         }
     }
 
-    fn read(&mut self, sensor: Sensor, addr: u8, buffer: &mut [u8]) -> Result<(), Self::Error> {
+    async fn read(
+        &mut self,
+        sensor: Sensor,
+        addr: u8,
+        buffer: &mut [u8],
+    ) -> Result<(), Self::Error> {
         match sensor {
             Sensor::Accelerometer | Sensor::Gyro | Sensor::Temperature => self
                 .ag_device
@@ -70,6 +75,7 @@ where
                     Operation::Write(&[SPI_READ | addr]),
                     Operation::Read(buffer),
                 ])
+                .await
                 .map_err(Errors::AG),
             Sensor::Magnetometer => self
                 .m_device
@@ -77,6 +83,7 @@ where
                     Operation::Write(&[SPI_READ | MS_BIT | addr]),
                     Operation::Read(buffer),
                 ])
+                .await
                 .map_err(Errors::M),
         }
     }
