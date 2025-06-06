@@ -78,10 +78,31 @@ where
     mag: MagSettings,
 }
 
+/// TODO: is this right? i don't think so
+pub struct LSM9DS1AccelGyro<'a, T>
+where
+    T: Interface,
+{
+    interface: &'a T,
+    accel: AccelSettings,
+    gyro: GyroSettings,
+}
+
+/// TODO: is this right? i don't think so
+pub struct LSM9DS1Mag<'a, T>
+where
+    T: Interface,
+{
+    interface: &'a T,
+    mag: MagSettings,
+}
+
 impl<T> LSM9DS1<T>
 where
     T: Interface,
 {
+    // TODO: `async fn split(self) -> (LSM9DS1AccelGyro<&'static T>)`?
+
     /// Write a configuration to a register.
     async fn write_register<C: ConfigToWrite>(&mut self, config: C) -> Result<(), T::Error> {
         self.interface

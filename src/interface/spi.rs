@@ -38,7 +38,7 @@ where
     }
 }
 
-/// TODO: this doesn't seem right. these are definitely the same error type
+/// TODO: this doesn't seem right. these are probably the same error type with a normal setup, but you could have them using different buses
 pub enum Errors<AgE, ME> {
     AG(AgE),
     M(ME),
