@@ -25,7 +25,6 @@ This library is work in progress. Not all features are implemented yet. Contribu
 - [ ] Interrupt
 - [x] FIFO Mode
 - [ ] allow blocking or async mode
-- [ ] split the devices so that they can be used from different tasks
 
 ## Usage
 

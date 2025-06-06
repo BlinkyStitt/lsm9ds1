@@ -39,6 +39,7 @@ where
 }
 
 /// TODO: this doesn't seem right. these are probably the same error type with a normal setup, but you could have them using different buses
+#[derive(Debug)]
 pub enum Errors<AgE, ME> {
     AG(AgE),
     M(ME),
