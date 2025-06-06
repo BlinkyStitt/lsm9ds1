@@ -107,7 +107,7 @@ pub enum AG {
 }
 
 impl AG {
-    pub fn addr(self) -> u8 {
+    pub const fn addr(self) -> u8 {
         self as u8
     }
 }
@@ -164,7 +164,7 @@ pub enum Mag {
 }
 
 impl Mag {
-    pub fn addr(self) -> u8 {
+    pub const fn addr(self) -> u8 {
         self as u8
     }
 }

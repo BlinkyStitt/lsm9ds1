@@ -136,7 +136,7 @@ pub enum Decimate {
 }
 
 impl Decimate {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 6 // shifted to bits [7:6], can be used directly
     }
 }

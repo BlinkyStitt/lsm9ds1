@@ -60,7 +60,7 @@ impl MagSettings {
     /// - FS[1:0] - Full-scale configuration
     /// - REBOOT - Reboot memory content (0:normal, 1:reboot) // TODO
     /// - SOFT_RST - Reset config and user registers (0:default, 1:reset) // TODO
-    pub fn ctrl_reg2_m(&self) -> u8 {
+    pub const fn ctrl_reg2_m(&self) -> u8 {
         self.scale.value()
     }
 
@@ -178,12 +178,12 @@ pub enum Scale {
 }
 
 impl Scale {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 5
     }
 
     /// Returns Magnetic sensitivity depending on scale. (Refer to Page 12)
-    pub fn sensitivity(self) -> f32 {
+    pub const fn sensitivity(self) -> f32 {
         use Scale::*;
         match self {
             _4G => 0.14,
@@ -202,7 +202,7 @@ pub enum I2cMode {
 }
 
 impl I2cMode {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 7
     }
 }
@@ -215,7 +215,7 @@ pub enum LowPowerMode {
 }
 
 impl LowPowerMode {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 5
     }
 }
@@ -228,7 +228,7 @@ pub enum SpiMode {
 }
 
 impl SpiMode {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 2
     }
 }
@@ -242,7 +242,7 @@ pub enum SysOpMode {
 }
 
 impl SysOpMode {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         self as u8
     }
 }

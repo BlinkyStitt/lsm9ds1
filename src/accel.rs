@@ -48,7 +48,7 @@ impl AccelSettings {
     /// - Zen_XL - Z-axis output enabled
     /// - Yen_XL - Y-axis output enabled
     /// - Xen_XL - X-axis output enabled
-    pub fn ctrl_reg5_xl(&self) -> u8 {
+    pub const fn ctrl_reg5_xl(&self) -> u8 {
         let mut result = 0_u8;
         if self.enable_z {
             result |= 1 << 5;
@@ -68,7 +68,7 @@ impl AccelSettings {
     /// - FS_XL[1:0] - Full-scale selection
     /// - BW_SCAL_ODR - Bandwidth selection
     /// - BW_XL[1:0] - Anti-aliasing filter bandwidth selection
-    pub fn ctrl_reg6_xl(&self) -> u8 {
+    pub const fn ctrl_reg6_xl(&self) -> u8 {
         self.sample_rate.value()
             | self.scale.value()
             | self.bandwidth_selection.value()
@@ -100,7 +100,7 @@ pub enum Scale {
 }
 
 impl Scale {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 3
     }
 
@@ -136,7 +136,7 @@ pub enum ODR {
 }
 
 impl ODR {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 5
     }
 }
@@ -149,7 +149,7 @@ pub enum BandwidthSelection {
 }
 
 impl BandwidthSelection {
-    pub fn value(&self) -> u8 {
+    pub const fn value(&self) -> u8 {
         match self {
             BandwidthSelection::ByODR => 0 << 2,
             BandwidthSelection::ByBW => 1 << 2,
@@ -171,7 +171,7 @@ pub enum Bandwidth {
 }
 
 impl Bandwidth {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         self as u8
     }
 }
@@ -188,7 +188,7 @@ pub enum HighRes {
 }
 
 impl HighRes {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 5
     }
 }

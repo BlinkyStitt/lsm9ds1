@@ -144,7 +144,7 @@ impl Scale {
     }
 
     /// Returns Angular rate sensitivity depending on scale. (Refer to Page 12)
-    pub fn sensitivity(self) -> f32 {
+    pub const fn sensitivity(self) -> f32 {
         use Scale::*;
         match self {
             _245DPS => 0.00875,
@@ -174,7 +174,7 @@ pub enum ODR {
 }
 
 impl ODR {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         (self as u8) << 5
     }
 }
@@ -193,7 +193,7 @@ pub enum Bandwidth {
 }
 
 impl Bandwidth {
-    pub fn value(self) -> u8 {
+    pub const fn value(self) -> u8 {
         self as u8
     }
 }
